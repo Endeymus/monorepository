@@ -1,0 +1,26 @@
+username: postgres
+password:
+spring:
+#  datasource:
+#    url: jdbc:postgresql://localhost:54322/postgres
+#    username: ${username}
+#    password: ${password}
+#  jpa:
+#  properties.hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
+  r2dbc:
+    url: r2dbc:postgresql://localhost:54322/postgres
+    username: ${username}
+    password: ${password}
+    schema: public
+    pool:
+      enabled: true
+      initial-size: 5
+      max-size: 10
+  liquibase:
+    enabled: true
+    change-log: classpath:db/changelog/db.changelog-master.yaml
+    user: ${username}
+    password: ${password}
+    url: jdbc:postgresql://localhost:54322/postgres
+
+logging.level.org.springframework.r2dbc: DEBUG

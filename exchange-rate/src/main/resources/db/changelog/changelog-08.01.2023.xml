@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+		http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+		http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+    <property name="uuid_type" value="uuid" dbms="postgresql"/>
+    <property name="uuid_function" value="uid.uuid_generate_v4()" dbms="postgresql"/>
+    <changeSet  id="1673174517000"  author="Endeymus">
+        <createTable tableName="currency">
+            <column name="id" type="${uuid_type}" valueComputed="${uuid_function}">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="currency" type="varchar(20)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <insert tableName="currency">
+            <column name="currency" value="RUB"/>
+        </insert>
+        <createTable  tableName="rate">
+            <column  name="id"  type="${uuid_type}" valueComputed="${uuid_function}">
+                <constraints  primaryKey="true"  nullable="false"/>
+            </column>
+            <column  name="currency_id"  type="uuid">
+                <constraints nullable="false"/>
+            </column>
+            <column name="value" type="numeric" defaultValueNumeric="0.0"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Endeymus" id="1673175110000">
+        <addForeignKeyConstraint
+                baseTableName="rate"
+                baseColumnNames="currency_id"
+                referencedTableName="currency"
+                referencedColumnNames="id"
+                constraintName="fk_rate_currency"
+                onDelete="CASCADE"
+                onUpdate="RESTRICT"/>
+    </changeSet>
+</databaseChangeLog>
